@@ -30,8 +30,23 @@ jobs:
       - name: Build debug APK
         run: ./gradlew assembleDebug
 
+      - name: Rename APK
+        run: mv app/build/outputs/apk/debug/app-debug.apk app/build/outputs/apk/debug/Nothing-Vault.apk
+
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
         with:
           name: nothing-vault-debug
-          path: app/build/outputs/apk/debug/app-debug.apk
+          path: app/build/outputs/apk/debug/Nothing-Vault.apk
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: latest
+          name: Nothing Vault (Latest Build)
+          body: |
+            Auto-built APK from latest commit on `main`.
+            Download `Nothing-Vault.apk` below.
+          files: app/build/outputs/apk/debug/Nothing-Vault.apk
+          make_latest: true
+          fail_on_unmatched_files: false
